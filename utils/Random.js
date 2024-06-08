@@ -5,7 +5,7 @@
  * @returns {number}
  */
 function getRandomRange(min, max) {
-    return Math.floor(Math.random() * (min - max) + min);
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 /**

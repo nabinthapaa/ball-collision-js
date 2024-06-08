@@ -49,8 +49,6 @@ export default class Ball {
      * the collision with the walls of the parent
      */
     moveBall() {
-        console.log(this.y);
-        console.log("DIFF", this.parent.clientHeight - this.element.clientHeight / 2);
         if (this.y > this.parent.clientHeight - this.element.clientHeight || this.y < 0) {
             this.dy *= -1;
         }
@@ -61,5 +59,32 @@ export default class Ball {
         this.y += this.speed * this.dy;
         this.x += this.speed * this.dx;
         this.drawBall();
+    }
+
+    /**
+     * Returns true if the balls are colliding, false otherwise
+     * and changes the direction of ball
+     * @param {Ball} ball - Ball to check collision with
+     * @returns {boolean}
+     */
+    isCollidingWith(ball) {
+        const x_distance = Math.floor(this.x - ball.x);
+        const y_distance = Math.floor(this.y - ball.y);
+        const sq_of_distances = x_distance * x_distance + y_distance * y_distance;
+        const sum_of_radius = this.r + ball.r;
+
+        if (sq_of_distances < sum_of_radius * sum_of_radius) {
+            console.log("Before collision", this, ball)
+            let tmp = this.dx;
+            let tmp_2 = this.dy;
+            this.dx = ball.dx;
+            this.dy = ball.dy;
+            ball.dx = tmp;
+            ball.dy = tmp_2;
+            console.log("After collision", this, ball)
+            return true
+        }
+
+        return false;
     }
 }
