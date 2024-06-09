@@ -21,6 +21,7 @@ export default class Ball {
         this.parent = parent;
         this.initBall();
         this.id = id;
+        this.mass = this.r * 1.08;
     }
 
 
@@ -101,19 +102,37 @@ export default class Ball {
      * @param {Ball} ball - Ball to check collision with
      * @returns {boolean}
      */
-    isCollidingWith(ball) {
+    checkCollisionWith(ball) {
         const x_distance = Math.floor(this.x - ball.x);
         const y_distance = Math.floor(this.y - ball.y);
         const sq_of_distances = (x_distance * x_distance) + (y_distance * y_distance);
         const sum_of_radius = (this.r + ball.r);
         if (sq_of_distances <= sum_of_radius * sum_of_radius) {
             this.isOverlappingWith(ball);
-            let tmp = this.dx;
-            let tmp_2 = this.dy;
-            this.dx = ball.dx;
-            this.dy = ball.dy;
-            ball.dx = tmp;
-            ball.dy = tmp_2;
+            // let tmp = this.dx;
+            // let tmp_2 = this.dy;
+            // this.dx = ball.dx;
+            // this.dy = ball.dy;
+            // ball.dx = tmp;
+            // ball.dy = tmp_2;
+            const angle = Math.atan2(y_distance, x_distance);
+
+            // dy angle w.r.t to tangent and dx w.r.t normal
+            let this_normal_velocity = this.dx * Math.cos(angle) + this.dy * Math.sin(angle);
+            let ball_normal_velocity = ball.dx * Math.cos(angle) + ball.dy * Math.sin(angle);
+
+            let this_tangent_velocity = -this.dx * Math.sin(angle) + this.dy * Math.cos(angle);
+            let ball_tangent_velocity = -ball.dx * Math.sin(angle) + ball.dy * Math.cos(angle);
+
+            // Normal velocities are swapped
+            let temp = this_normal_velocity;
+            this_normal_velocity = ball_normal_velocity;
+            ball_normal_velocity = temp;
+
+            this.dx = this_normal_velocity * Math.cos(angle) - this_tangent_velocity * Math.sin(angle);
+            this.dy = this_normal_velocity * Math.sin(angle) + this_tangent_velocity * Math.cos(angle);
+            ball.dx = ball_normal_velocity * Math.cos(angle) - ball_tangent_velocity * Math.sin(angle);
+            ball.dy = ball_normal_velocity * Math.sin(angle) + ball_tangent_velocity * Math.cos(angle);
             return true
         }
 
