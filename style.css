@@ -3,9 +3,24 @@ body {
 }
 
 #bounding-box {
-  width: 90vw;
-  height: 90vh;
+  width: 95vw;
+  height: 95vh;
   margin-inline: auto;
   border: 1px solid gray;
   position: relative;
+}
+
+.ball {
+  position: absolute;
+  border: 1px solid red;
+  transition: all;
+}
+
+.ball > div {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid red;
+  background-color: var(--background, red);
 }
